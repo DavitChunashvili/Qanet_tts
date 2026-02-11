@@ -18,6 +18,7 @@
     "declarationMap": true,
     "sourceMap": true,
     "moduleResolution": "node",
+    "types": ["vite/client"],
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "jsx": "react-jsx"

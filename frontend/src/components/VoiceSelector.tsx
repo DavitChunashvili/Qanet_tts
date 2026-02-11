@@ -26,7 +26,7 @@ export default function VoiceSelector({
     <div className="voices-section">
       <div className="form-group">
         <label htmlFor="locale-select">Language/Locale</label>
-        <select id="locale-select" value={locale} onChange={handleChange}>
+        <select id="locale-select" className="input" value={locale} onChange={handleChange}>
           {localeOptions.map(opt => (
             <option key={opt.value} value={opt.value}>
               {opt.label}

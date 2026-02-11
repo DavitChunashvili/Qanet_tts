@@ -5,7 +5,7 @@ import Controls from './components/Controls';
 import Status from './components/Status';
 import './index.css';
 
-type StatusType = 'idle' | 'speaking' | 'stopped' | 'exporting' | 'done' | 'error';
+type StatusType = 'idle' | 'speaking' | 'stopped' | 'exporting' | 'done' | 'error' | 'success' | 'warning';
 
 function App() {
   const [text, setText] = useState('Hello, this is a test of the text to speech service.');
@@ -172,7 +172,8 @@ function App() {
       const filename = `tts-${timestamp}.mp3`;
 
       // Try to download
-      if (navigator.share && navigator.share.canShare?.({ files: [] })) {
+      const navAny = navigator as any;
+      if (navigator.share && navAny.canShare?.({ files: [] })) {
         const file = new File([blob], filename, { type: 'audio/mpeg' });
         navigator.share({ files: [file], title: 'Audio File', text: 'Exported TTS audio' })
           .catch(() => {
@@ -206,13 +207,15 @@ function App() {
 
   return (
     <div className="app">
-      <div className="container">
+      <main className="container" role="main">
         <div className="header">
           <h1>🎙️ QANet TTS</h1>
           <p>Text-to-Speech PWA</p>
         </div>
 
-        <TextInput value={text} onChange={setText} />
+        <section className="card-section">
+          <TextInput value={text} onChange={setText} />
+        </section>
 
         <VoiceSelector
           locale={locale}
@@ -234,7 +237,7 @@ function App() {
         />
 
         <Status type={status} message={statusMessage} />
-      </div>
+      </main>
     </div>
   );
 }

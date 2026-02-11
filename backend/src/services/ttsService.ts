@@ -101,32 +101,53 @@ async function getAzureTTS(options: TTSOptions): Promise<Buffer> {
 
 async function getAWSPollyTTS(options: TTSOptions): Promise<Buffer> {
   try {
-    const { Polly } = await import('@aws-sdk/client-polly');
-    const client = new Polly({ region: process.env.AWS_REGION || 'us-east-1' });
+    const { PollyClient, SynthesizeSpeechCommand } = await import('@aws-sdk/client-polly');
+    const client = new PollyClient({ region: process.env.AWS_REGION || 'us-east-1' });
 
     const voiceMap: { [key: string]: string } = {
       'en-US': 'Joanna',
       'es-ES': 'Lucia',
     };
 
-    const voice = voiceMap[options.locale] || 'Joanna';
+    const voice = (voiceMap[options.locale] || 'Joanna') as any;
 
-    const response = await client.synthesizeSpeech({
+    const params = {
       Text: options.text,
       VoiceId: voice,
       OutputFormat: 'mp3',
       Engine: 'neural',
-      Rate: Math.round(options.rate * 100).toString(),
-      Pitch: ((options.pitch - 1) * 50).toString(),
-    });
+      // Polly doesn't accept Rate/Pitch strings in this API; leave or map if needed
+    } as any;
+
+    const command = new SynthesizeSpeechCommand(params);
+    const response = await client.send(command);
 
     const chunks: Buffer[] = [];
-    if (response.AudioStream) {
-      for await (const chunk of response.AudioStream as any) {
+    const audioStream: any = response.AudioStream;
+
+    if (!audioStream) {
+      return Buffer.alloc(0);
+    }
+
+    // If AudioStream is a Uint8Array or Buffer
+    if (audioStream instanceof Uint8Array || Buffer.isBuffer(audioStream)) {
+      return Buffer.from(audioStream);
+    }
+
+    // If it's an async iterable (for example, a stream), iterate and concat
+    if (typeof audioStream[Symbol.asyncIterator] === 'function') {
+      for await (const chunk of audioStream as any) {
         chunks.push(Buffer.from(chunk));
       }
+      return Buffer.concat(chunks);
     }
-    return Buffer.concat(chunks);
+
+    // Fallback: try to convert directly
+    try {
+      return Buffer.from(audioStream);
+    } catch (e) {
+      return Buffer.alloc(0);
+    }
   } catch (error) {
     console.error('AWS Polly error:', error);
     return getMockTTS(options);

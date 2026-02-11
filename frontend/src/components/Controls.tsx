@@ -70,15 +70,18 @@ export default function Controls({
           className="btn btn-primary"
           onClick={onSpeak}
           disabled={isSpeaking}
+          aria-pressed={isSpeaking}
         >
-          🔊 Speak
+          <span className="btn-icon">🔊</span>
+          <span>Speak</span>
         </button>
         <button
           className="btn btn-danger"
           onClick={onStop}
           disabled={!isSpeaking}
         >
-          🛑 Stop
+          <span className="btn-icon">🛑</span>
+          <span>Stop</span>
         </button>
       </div>
 
@@ -88,7 +91,8 @@ export default function Controls({
         disabled={!isOnline}
         title={!isOnline ? 'Requires internet connection' : ''}
       >
-        ⬇️ Export Audio
+        <span className="btn-icon">⬇️</span>
+        <span>Export Audio</span>
       </button>
     </>
   );

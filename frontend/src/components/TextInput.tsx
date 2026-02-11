@@ -20,10 +20,12 @@ export default function TextInput({ value, onChange }: TextInputProps) {
       </div>
       <textarea
         id="text-input"
+        className="input"
         value={value}
         onChange={handleChange}
         placeholder="Enter text here..."
         maxLength={1000}
+        aria-label="Text to speak"
       />
     </div>
   );
