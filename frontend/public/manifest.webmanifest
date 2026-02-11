@@ -1,0 +1,28 @@
+{
+  "name": "QANet Text-to-Speech",
+  "short_name": "QANet TTS",
+  "description": "Production-ready PWA for text-to-speech on iOS",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "screenshots": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "540x720",
+      "form_factor": "narrow",
+      "type": "image/svg+xml"
+    }
+  ]
+}
